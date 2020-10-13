@@ -3,7 +3,8 @@ version: '2'
 services:
 
   jenkins:
-    image: jenkins/jenkins:lts
+    image: nathema/jenkins-sfdx
+    restart: unless-stopped
     volumes:
       - './jenkins_home:/var/jenkins_home'
     ports:
@@ -11,17 +12,19 @@ services:
 
   nginx:
     image: nginx
+    restart: unless-stopped
     links:
       - jenkins
     volumes:
       - "./etc/nginx/conf.d/:/etc/nginx/conf.d/"
     environment:
-      VIRTUAL_HOST: example.com
-      LETSENCRYPT_HOST: example.com
-      LETSENCRYPT_EMAIL: youremail@example.com
+      VIRTUAL_HOST: ci.sfdev.eu
+      LETSENCRYPT_HOST: ci.sfdev.eu
+      LETSENCRYPT_EMAIL: peter@sfdev.eu
 
   nginx-proxy:
     image: jwilder/nginx-proxy
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -33,6 +36,7 @@ services:
 
   letsencrypt-nginx-proxy-companion:
     image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: unless-stopped
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     volumes_from:
