@@ -4,14 +4,16 @@ services:
 
   jenkins:
     image: nathema/jenkins-sfdx
+    container_name: jenkins
     restart: unless-stopped
     volumes:
       - './jenkins_home:/var/jenkins_home'
     ports:
-      - "8080"
+      - "127.0.0.1:8080:8080"
 
   nginx:
     image: nginx
+    container_name: nginx
     restart: unless-stopped
     links:
       - jenkins
@@ -24,6 +26,7 @@ services:
 
   nginx-proxy:
     image: jwilder/nginx-proxy
+    container_name: nginx-proxy
     restart: unless-stopped
     ports:
       - "80:80"
@@ -36,6 +39,7 @@ services:
 
   letsencrypt-nginx-proxy-companion:
     image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-nginx-proxy-companion
     restart: unless-stopped
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
